@@ -37,24 +37,9 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() body: Body) {
-    return this.usersService.update(+id, body);
-  }
-
-  @Put('/updateH/:userId')
-  updateH(@Param('userId') userId: number, @Body() body: any) {
-    return this.usersService.updateH(userId, body);
-  }
-
-  @Put('/updateC/:userId')
-  updateC(@Param('userId') userId: number, @Body() body: any) {
-    return this.usersService.updateC(userId, body);
-  }
-
-  @Put('/updateE/:userId')
-  updateE(@Param('userId') userId: number, @Body() body: any) {
-    return this.usersService.updateE(userId, body);
+  @Put('/update/:userId')
+  update(@Param('userId') userId: number, @Body() body: Body) {
+    return this.usersService.update(+userId, body);
   }
 
   @Delete(':id')

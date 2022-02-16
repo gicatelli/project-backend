@@ -1,4 +1,3 @@
-
 import { Hability } from './entities/hability.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { where } from 'sequelize/dist';
@@ -59,47 +58,12 @@ export class UsersService {
     let users = await this.userRepository.findOne({where: {id: id}, relations: ['enderecos', 'contatos', 'habilidades']});
     return users;
   }
-
+  
   async update(userId:number, body: any) {
-    let {nome, senha, idade, cpf} = body
-    let users = await this.userRepository.findOne({where: {id: userId}, relations: ['enderecos', 'contatos', 'habilidades']});
-    let usersAtt = await this.userRepository.save({
-      ...users,
-      nome,
-      senha,
-      idade,
-      cpf
-    });
-    return usersAtt;
-  }
-
-  async updateH (userId: number, body: any) {
-    let users = await this.userRepository.findOne({where: {id: userId}, relations: ['habilidades']});
+    let users = await this.userRepository.findOne({where: {id: userId}, relations: ['habilidades', 'contatos', 'enderecos']});
     if (users) {
-      let usersAtt = await this.userRepository.save(
-        body,
-      );
-      return usersAtt;
-    }
-  }
-
-  async updateC (userId: number, body: any) {
-    let users = await this.userRepository.findOne({where: {id: userId}, relations: ['contatos']});
-    if (users) {
-      let usersAtt = await this.userRepository.save(
-        body,
-      );
-      return usersAtt;
-    }
-  }
-
-  async updateE (userId: number, body: any) {
-    let users = await this.userRepository.findOne({where: {id: userId}, relations: ['enderecos']});
-    if (users) {
-      let usersAtt = await this.userRepository.save(
-        body,
-      );
-      return usersAtt;
+      users = body
+      return this.userRepository.save(users);
     }
   }
 
