@@ -1,3 +1,4 @@
+import { Admin } from '../admins/entities/admin.entity';
 import { Hability } from './entities/hability.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { where } from 'sequelize/dist';
@@ -5,7 +6,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { Injectable, Body } from '@nestjs/common';
+import { Injectable, Body, HttpException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -13,13 +14,15 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {
+  ) {}
 
-  }
-
-  async create(body: any) {
-    let users = await this.userRepository.save(this.userRepository.create(body as DeepPartial<User>));
-    return users;
+  async create(cpf: string, body: any) {
+    let users = await this.userRepository.findOne({where: {cpf: body.cpf}})
+    if (users) {
+      throw new HttpException('Usuário já cadastrado', 406)
+    } else {
+      await this.userRepository.save(this.userRepository.create(body as DeepPartial<User>));
+    }
   }
 
   async createH(userId: number, body: any) {
@@ -71,4 +74,5 @@ export class UsersService {
     let users = await this.userRepository.findOne({where: {id: userId}, relations: ['enderecos', 'contatos', 'habilidades']});
     return this.userRepository.delete(userId);
   }
+
 }

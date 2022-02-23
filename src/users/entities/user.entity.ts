@@ -13,9 +13,6 @@ export class User {
     nome: string
 
     @Column()
-    senha: string
-
-    @Column()
     idade: number
 
     @Column()
